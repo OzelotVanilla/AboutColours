@@ -5,8 +5,10 @@ public class StageController : MonoBehaviour
 {
     public Stage current_stage__ref;
 
+    /** `{position: Tile}` */
     private Dictionary<Vector2Int, Tile> tile__dict = new();
 
+    /** `{position: Bucket}` */
     private Dictionary<Vector2Int, Bucket> bucket__dict = new();
 
     private Player player__ref;
@@ -46,10 +48,17 @@ public class StageController : MonoBehaviour
 
     void consumeStep(Vector2Int direction)
     {
+        // Consume.
         this.tryMovePlayer(direction);
+        if (this.is_stage_clear)
+        {
+            Debug.Log("Stage clear!");
+        }
 
+        // Publish new.
         StageStepBus.publishStep();
 
+        // Wait.
         this.StartCoroutine(this.cooldownThenTryNextStep());
     }
 
@@ -89,9 +98,26 @@ public class StageController : MonoBehaviour
         // Move player.
         this.player__ref.transform.localPosition += new Vector3(direction.x, direction.y, 0);
         this.player_position += direction;
+        this.resolvePlayerSuccessfulMove();
 
         // Change the facing by rotation.
         this.updatePlayerFacing(direction);
+    }
+
+    /** See if there is something that can be interacted with newly-moved player. */
+    void resolvePlayerSuccessfulMove()
+    {
+        // Check if there is a bucket.
+        if (this.bucket__dict.TryGetValue(this.player_position, out Bucket bucket))
+        {
+            this.player__ref.paint_colour = bucket.contained_colour;
+        }
+
+        // Check if there is a tile.
+        if (this.tile__dict.TryGetValue(this.player_position, out Tile tile))
+        {
+            tile.current_colour = ColourMixer.mix(tile.current_colour, this.player__ref.paint_colour);
+        }
     }
 
     void updatePlayerFacing(Vector2Int direction)
@@ -113,6 +139,23 @@ public class StageController : MonoBehaviour
 
         this.tryConsumeQueuedStep();
     }
+
+    public bool is_stage_clear
+    {
+        get
+        {
+            foreach (var tile in this.tile__dict.Values)
+            {
+                if (tile.target_colour != ColourID.none && tile.current_colour != tile.target_colour)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+    }
+
 
     public void requestUndo()
     {

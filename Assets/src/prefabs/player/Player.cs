@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     public SpriteRenderer body__renderer;
 
     [NonSerialized]
-    public LevelPalette level_palette;
+    public StagePalette level_palette;
 
     private bool is_colour_refresh_needed = true;
 

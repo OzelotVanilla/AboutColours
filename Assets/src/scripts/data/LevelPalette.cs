@@ -4,7 +4,7 @@ using UnityEngine;
 /**
  * Converting colours defined in {@link ColourID} to Unity `Color`.
  */
-public class LevelPalette
+public class StagePalette
 {
     private Dictionary<ColourID, Color32> palette = new();
 
