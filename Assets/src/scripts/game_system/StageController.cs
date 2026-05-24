@@ -8,6 +8,8 @@ public class StageController : MonoBehaviour
     /** `{position: Tile}` */
     private Dictionary<Vector2Int, Tile> tile__dict = new();
 
+    private Dictionary<Vector2Int, Wall> wall__dict = new();
+
     /** `{position: Bucket}` */
     private Dictionary<Vector2Int, Bucket> bucket__dict = new();
 
@@ -93,11 +95,17 @@ public class StageController : MonoBehaviour
      */
     void tryMovePlayer(Vector2Int direction)
     {
-        // TODO: Check if able to move.
+        var target_position = this.player_position + direction;
+
+        // Check if able to move.
+        if (this.wall__dict.ContainsKey(target_position))
+        {
+            return;
+        }
 
         // Move player.
         this.player__ref.transform.localPosition += new Vector3(direction.x, direction.y, 0);
-        this.player_position += direction;
+        this.player_position = target_position;
         this.resolvePlayerSuccessfulMove();
 
         // Change the facing by rotation.
@@ -188,6 +196,7 @@ public class StageController : MonoBehaviour
         this.current_stage__ref.checkInspectorReference();
 
         this.collectTiles();
+        this.collectWalls();
         this.collectBuckets();
         this.collectPlayer();
     }
@@ -202,7 +211,7 @@ public class StageController : MonoBehaviour
         );
     }
 
-    void collectTiles()
+    private void collectTiles()
     {
         var tiles = this.current_stage__ref.tile__container__ref.GetComponentsInChildren<Tile>();
 
@@ -217,6 +226,24 @@ public class StageController : MonoBehaviour
             }
 
             this.tile__dict.Add(position, tile);
+        }
+    }
+
+    private void collectWalls()
+    {
+        var walls = this.current_stage__ref.wall__container__ref.GetComponentsInChildren<Wall>();
+
+        foreach (var wall in walls)
+        {
+            var position = this.getGridPositionFromTransform(wall.transform);
+
+            if (this.wall__dict.ContainsKey(position))
+            {
+                Debug.LogError($"[StageController] duplicated wall position: {position}");
+                continue;
+            }
+
+            this.wall__dict.Add(position, wall);
         }
     }
 
