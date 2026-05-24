@@ -10,7 +10,7 @@ public class StageScene : MonoBehaviour
 
     void __start__()
     {
-        this.assignCurrentStageFromSlot();
+        this.loadScene();
         this.stage_controller__ref.notifyStageCanSetup();
     }
 
@@ -18,7 +18,8 @@ public class StageScene : MonoBehaviour
     {
     }
 
-    private void assignCurrentStageFromSlot()
+    /** Depends on whether the scene is loaded. E.g., from `GameFlowController` or already assigned scene. */
+    private void loadScene()
     {
         if (this.stage__slot == null)
         {
@@ -32,6 +33,33 @@ public class StageScene : MonoBehaviour
             return;
         }
 
+        // If there is scene to load, add to `this.stage__slot`.
+        if (
+            GameFlowController.instance != null &&
+            GameFlowController.instance.current_stage_id != GameFlowController.id_not_set
+        )
+        {
+            // Clear all the existing children in `this.stage__slot`.
+            foreach (Transform child in this.stage__slot)
+            {
+                UnityEngine.Object.Destroy(child.gameObject);
+            }
+
+            // Add it as a child of `this.stage__slot`.
+            if (!GameFlowController.instance.stage_prefab__dict.TryGetValue(GameFlowController.instance.current_stage_id, out var stage_prefab))
+            {
+                Debug.LogError($"[StageScene] Stage prefab was not found: {GameFlowController.instance.current_stage_id}");
+                return;
+            }
+            UnityEngine.Object.Instantiate(stage_prefab, this.stage__slot);
+        }
+
+        // Try to see if there is a scene already in this stage scene.
+        this.assignCurrentStageFromSlot();
+    }
+
+    private void assignCurrentStageFromSlot()
+    {
         var stages = this.stage__slot.GetComponentsInChildren<Stage>(includeInactive: false);
 
         if (stages.Length == 0)

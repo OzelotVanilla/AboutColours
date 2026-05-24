@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Stage : MonoBehaviour
 {
+    public string stage_id = "<not_setted_yet>";
+
     public Transform tile__container__ref;
 
     public Transform wall__container__ref;

@@ -211,6 +211,10 @@ PrefabInstance:
       value: Stage01
       objectReference: {fileID: 0}
     - target: {fileID: 4004164151563013987, guid: 5a71bc3bc864c41dca875ea199c3a97e, type: 3}
+      propertyPath: stage_id
+      value: stage_01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4004164151563013987, guid: 5a71bc3bc864c41dca875ea199c3a97e, type: 3}
       propertyPath: tile__container__ref
       value: 
       objectReference: {fileID: 2122853590903896872}
