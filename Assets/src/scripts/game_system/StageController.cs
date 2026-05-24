@@ -98,6 +98,9 @@ public class StageController : MonoBehaviour
     {
         var target_position = this.player_position + direction;
 
+        // Change the facing by rotation.
+        this.updatePlayerFacing(direction);
+
         // Check if able to move.
         if (this.wall__dict.ContainsKey(target_position))
         {
@@ -108,9 +111,6 @@ public class StageController : MonoBehaviour
         this.player__ref.transform.localPosition += new Vector3(direction.x, direction.y, 0);
         this.player_position = target_position;
         this.resolvePlayerSuccessfulMove();
-
-        // Change the facing by rotation.
-        this.updatePlayerFacing(direction);
     }
 
     /** See if there is something that can be interacted with newly-moved player. */
