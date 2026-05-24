@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class StageController : MonoBehaviour
 {
@@ -27,7 +28,7 @@ public class StageController : MonoBehaviour
 
     private bool is_step_cooling_down = false;
 
-    void __start__()
+    void __setup__()
     {
         this.assignRefs();
     }
@@ -285,7 +286,7 @@ public class StageController : MonoBehaviour
         this.player_position = this.getGridPositionFromTransform(this.player__ref.transform);
     }
 
-    void Start() { this.__start__(); }
+    public void notifyStageCanSetup() { this.__setup__(); }
 
     void Update() { this.__update__(); }
 

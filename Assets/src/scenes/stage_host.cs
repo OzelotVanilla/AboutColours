@@ -11,6 +11,7 @@ public class StageScene : MonoBehaviour
     void __start__()
     {
         this.assignCurrentStageFromSlot();
+        this.stage_controller__ref.notifyStageCanSetup();
     }
 
     void __update__()
