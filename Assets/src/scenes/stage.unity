@@ -390,7 +390,7 @@ GameObject:
   - component: {fileID: 825683893}
   - component: {fileID: 825683894}
   m_Layer: 0
-  m_Name: stage_host
+  m_Name: stage_scene
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
