@@ -172,7 +172,8 @@ public class StageController : MonoBehaviour
 
     public void requestRestart()
     {
-
+        var current_scene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(current_scene.name);
     }
 
     public void requestOpenMenu()
